@@ -16,7 +16,7 @@ services:
        MYSQL_USER: wordpress
        MYSQL_PASSWORD: XAzjQb95HXYuVtWy
 
-  web:
+   web:
      image: nginx
      depends_on:
        - php
