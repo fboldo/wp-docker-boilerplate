@@ -1,0 +1,59 @@
+version: '3.3'
+
+services:
+
+   db:
+     image: mysql:5.7
+     restart: always
+     volumes:
+       #
+       # Persist our MySQL data
+       #
+       - ./data:/var/lib/mysql
+     environment:
+       MYSQL_ROOT_PASSWORD: XAzjQb95HXYuVtWy
+       MYSQL_DATABASE: wordpress
+       MYSQL_USER: wordpress
+       MYSQL_PASSWORD: XAzjQb95HXYuVtWy
+
+   php:
+     image: wordpress:5-fpm
+     depends_on:
+       - db
+     restart: always
+     volumes:
+       #
+       # Copy in our PHP config for large uploads.
+       #
+       - ./php-uploads.ini:/usr/local/etc/php/conf.d/uploads.ini
+       #
+       # When first run, this image populates /var/www/html/ with a Wordpress install,
+       # and we want that to be exported so we have a copy of our code.
+       #
+       - ./wordpress:/var/www/html
+     environment:
+       WORDPRESS_DB_HOST: db:3306
+       WORDPRESS_DB_USER: wordpress
+       WORDPRESS_DB_PASSWORD: XAzjQb95HXYuVtWy
+
+   https-portal:
+     image: steveltn/https-portal:1
+     depends_on:
+       - web
+     ports:
+       - 80:80
+       - 443:443
+     restart: always
+     #
+     # Save our SSL certs between runs so they aren't regenerated on every single run.
+     #
+     volumes:
+       - ./ssl_certs:/var/lib/https-portal
+     environment:
+       DOMAINS: 'supersaudavel.net -> http://web:80 #production'
+       #DOMAINS: 'YOUR_FQDN -> http://web:80 #staging' # Uncomment when you want to test a staging cert.
+       #DOMAINS: 'YOUR_FQDN -> http://web:80 #production' # Uncomment when you are ready for production.
+       #
+       # Allow larger files to be uploaded
+       #
+       CLIENT_MAX_BODY_SIZE: 64M
