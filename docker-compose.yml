@@ -70,7 +70,7 @@ services:
      volumes:
        - ./ssl_certs:/var/lib/https-portal
      environment:
-       DOMAINS: 'supersaudavel.net -> http://web:80 #production'
+       DOMAINS: 'test.localhost -> http://web:80 #local'
        #DOMAINS: 'YOUR_FQDN -> http://web:80 #staging' # Uncomment when you want to test a staging cert.
        #DOMAINS: 'YOUR_FQDN -> http://web:80 #production' # Uncomment when you are ready for production.
        #
