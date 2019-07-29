@@ -3,3 +3,4 @@ mautic
 mysql
 ssl_certs
 .env
+my.env
